@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: msclientes
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://banco-msclientes:5432/${POSTGRES_DB} #para conectar com o banco da network deve-se passar o nome do container do banco criado no lugar de localhost
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    initialization-mode: always
+    initialize: true
+    continue-on-error: true
+    platform: postgresql
+    maxActive: 3
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+    show_sql: true
+    properties:
+      hibernate:
+        hbm2ddl.create_namespaces: true  # Habilita a criação automática de namespaces (schemas)
+
+server:
+  port: 0 #sobe em uma porta randomica
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://ms-eureka-user:ecok-usr-eeuramssur@${EUREKA_SERVER}:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  file:
+    name: ./logs/log-file.log
